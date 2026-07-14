@@ -52,6 +52,13 @@ Luego visita `http://localhost:8000`.
 - **Video**: reservado para el hero o el proceso; usar Pexels Videos
   (real, sin IA) con póster de imagen y sin autoplay en móvil.
 
+## Atribución de campañas (ads)
+
+El sitio captura `utm_*`, `fbclid`, `gclid` y `ttclid` de la primera
+visita (first-touch, en sessionStorage) y los adjunta a cada lead junto
+con la página de aterrizaje y el referrer. La convención de campañas y
+los copys por país están en [ADS.md](ADS.md).
+
 ## Conectar Formspree (medición de leads)
 
 El formulario ya envía por AJAX a Formspree y registra en cada lead el
