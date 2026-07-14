@@ -110,6 +110,22 @@ if (stickyCta && leadBlock) {
   window.addEventListener("scroll", updateCta, { passive: true });
 }
 
+// ===== Atribución: captura de UTMs (first-touch) =====
+// Guarda utm_* y click IDs de la primera visita en sessionStorage para que
+// sobrevivan la navegación entre países y lleguen junto con cada lead.
+(function captureUtm() {
+  try {
+    if (sessionStorage.getItem("oc_attrib")) return; // first-touch: no sobrescribir
+    const params = new URLSearchParams(window.location.search);
+    const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "ttclid"];
+    const found = {};
+    keys.forEach((k) => { if (params.get(k)) found[k] = params.get(k); });
+    found.landing = window.location.pathname;
+    found.referrer = document.referrer || "direct";
+    sessionStorage.setItem("oc_attrib", JSON.stringify(found));
+  } catch (e) { /* sessionStorage bloqueado: seguimos sin atribución */ }
+})();
+
 // ===== Captura de leads (Formspree) =====
 // Configuración: crea un formulario gratis en https://formspree.io con tu
 // correo, copia el ID (la parte final de https://formspree.io/f/XXXXXXXX)
@@ -155,6 +171,10 @@ if (leadForm) {
       const data = new FormData(leadForm);
       data.append("origen", leadForm.dataset.origen || "atlas");
       data.append("pagina", window.location.pathname);
+      try {
+        const attrib = JSON.parse(sessionStorage.getItem("oc_attrib") || "{}");
+        Object.entries(attrib).forEach(([k, v]) => data.append(k, v));
+      } catch (e) { /* sin atribución */ }
       data.append("_subject", "Nuevo lead — Orígenes Coffee");
 
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
@@ -174,6 +194,22 @@ if (leadForm) {
       mailtoFallback(email);
     }
   });
+}
+
+// ===== Video: reproducir solo en pantalla (y nunca con movimiento reducido) =====
+const filmVideo = document.getElementById("filmVideo");
+
+if (filmVideo && !reducedMotion) {
+  const filmObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) filmVideo.play().catch(() => {});
+        else filmVideo.pause();
+      });
+    },
+    { threshold: 0.35 }
+  );
+  filmObserver.observe(filmVideo);
 }
 
 // ===== Año del pie =====
