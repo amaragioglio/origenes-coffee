@@ -688,6 +688,31 @@ input:focus-visible {
   text-align: right;
 }
 
+/* ===== Película (video real) ===== */
+.film {
+  padding: 5.5rem 0;
+}
+
+.film-figure {
+  width: min(1160px, 100%);
+  margin: 0 auto;
+}
+
+.film-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  background: var(--paper-dim);
+}
+
+.film-figure figcaption {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-top: 0.8rem;
+}
+
 /* ===== Lista / leads ===== */
 .lead-block {
   border-top: 1px solid var(--hair);

@@ -52,3 +52,15 @@ licencia, y una supuesta foto del salto que en realidad era Yosemite.
 Para videos reales (pendiente): usar [Pexels Videos](https://www.pexels.com/videos/)
 (licencia Pexels, uso comercial gratuito) o Pixabay con el filtro de
 contenido IA desactivado.
+
+### Video (v4)
+
+| Archivo | Fuente | Licencia |
+| --- | --- | --- |
+| assets/video/tostado.mp4 | Pexels — "Coffee Beans in Roasting Machine" (ID 6280333), Olha Ruskykh | Pexels License (uso comercial libre, video real) |
+| video-poster.avif | Unsplash 1607681034540-2c46cc71896d (tostadora) | Unsplash License |
+
+### Tarjetas sociales
+
+`assets/og/*.jpg` son tarjetas tipográficas propias renderizadas con las
+fuentes de la casa — no son fotografías.
