@@ -77,6 +77,24 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
+/* accesibilidad: saltar al contenido (visible solo con foco) */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 300;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.7rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
 .container {
   width: min(1160px, 92%);
   margin: 0 auto;
@@ -423,7 +441,7 @@ input:focus-visible {
 .feature-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(20, 15, 10, 0.28) 0%, rgba(20, 15, 10, 0) 40%, rgba(20, 15, 10, 0.55) 100%);
+  background: linear-gradient(180deg, rgba(20, 15, 10, 0.3) 0%, rgba(20, 15, 10, 0) 40%, rgba(20, 15, 10, 0.66) 100%);
 }
 
 .feature-title {
@@ -447,6 +465,11 @@ input:focus-visible {
   line-height: 1;
   letter-spacing: -0.01em;
   color: #faf5ea;
+  text-shadow: 0 2px 24px rgba(15, 10, 6, 0.45);
+}
+
+.label-onimage {
+  text-shadow: 0 1px 12px rgba(15, 10, 6, 0.6);
 }
 
 .feature-head {

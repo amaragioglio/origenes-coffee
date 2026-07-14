@@ -13,14 +13,17 @@ TEMPLATE = """<!DOCTYPE html>
   <meta property="og:site_name" content="Orígenes Coffee">
   <meta property="og:title" content="{title} — Orígenes Coffee">
   <meta property="og:description" content="{desc}">
-  <meta property="og:image" content="/assets/img/{hero}.jpg">
+  <meta property="og:image" content="{site}/assets/img/{hero}.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preload" as="image" href="assets/img/{hero}.jpg" imagesrcset="assets/img/{hero}-sm.jpg 960w, assets/img/{hero}.jpg 1920w" imagesizes="100vw">
+  <link rel="canonical" href="{site}/{slug}">
+  <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{desc}", "image": "{site}/assets/img/{hero}.jpg", "inLanguage": "en", "publisher": {{"@type": "Organization", "name": "Orígenes Coffee"}}, "mainEntityOfPage": "{site}/{slug}"}}</script>
+  <link rel="preload" as="image" href="assets/img/{hero}.{hero_ext}" imagesrcset="assets/img/{hero}-sm.{hero_ext} 960w, assets/img/{hero}.{hero_ext} 1920w" imagesizes="100vw">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-normal-300.woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 </head>
 <body class="tema-{slug}">
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar over-image" id="topbar">
     <div class="container topbar-inner">
       <a href="index.html" class="wordmark">Orígenes <em>Coffee</em></a>
@@ -36,10 +39,10 @@ TEMPLATE = """<!DOCTYPE html>
 
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
-  <main>
+  <main id="main">
     <div class="feature-hero" id="featureHero">
-      <img src="assets/img/{hero}.jpg"
-           srcset="assets/img/{hero}-sm.jpg 960w, assets/img/{hero}.jpg 1920w"
+      <img src="assets/img/{hero}.{hero_ext}"
+           srcset="assets/img/{hero}-sm.{hero_ext} 960w, assets/img/{hero}.{hero_ext} 1920w"
            sizes="100vw" fetchpriority="high" alt="{hero_alt}">
       <div class="feature-shade"></div>
       <div class="feature-title container">
@@ -67,7 +70,7 @@ TEMPLATE = """<!DOCTYPE html>
       </aside>
 
       <figure class="interlude">
-        <img src="assets/img/{photo1}.jpg" srcset="assets/img/{photo1}-sm.jpg 800w, assets/img/{photo1}.jpg 1200w" sizes="(max-width: 780px) 100vw, 1160px" alt="{photo1_alt}" loading="lazy">
+        <img src="assets/img/{photo1}.{photo1_ext}" srcset="assets/img/{photo1}-sm.{photo1_ext} 800w, assets/img/{photo1}.{photo1_ext} 1200w" sizes="(max-width: 780px) 100vw, 1160px" alt="{photo1_alt}" loading="lazy">
         <figcaption>{photo1_cap}</figcaption>
       </figure>
 
@@ -81,7 +84,7 @@ TEMPLATE = """<!DOCTYPE html>
       </div>
 
       <figure class="interlude tall">
-        <img src="assets/img/{photo2}.jpg" srcset="assets/img/{photo2}-sm.jpg 800w, assets/img/{photo2}.jpg 1200w" sizes="(max-width: 780px) 100vw, 680px" alt="{photo2_alt}" loading="lazy">
+        <img src="assets/img/{photo2}.{photo2_ext}" srcset="assets/img/{photo2}-sm.{photo2_ext} 800w, assets/img/{photo2}.{photo2_ext} 1200w" sizes="(max-width: 780px) 100vw, 680px" alt="{photo2_alt}" loading="lazy">
         <figcaption>{photo2_cap}</figcaption>
       </figure>
     </article>
@@ -104,8 +107,9 @@ TEMPLATE = """<!DOCTYPE html>
         <span class="label">Join la lista</span>
         <h2>Taste {name} the way your family remembers it.</h2>
         <p>
-          We're launching soon. Leave your email and get each country's
-          story — and its coffee — before anyone else.
+          We're launching soon. Leave your email to reserve the first
+          roast of <em>Orígenes {name}</em> — and get every story before
+          anyone else.
         </p>
         <form class="lead-form" id="leadForm" data-origen="{slug}">
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
@@ -130,6 +134,8 @@ TEMPLATE = """<!DOCTYPE html>
 </body>
 </html>
 """
+
+SITE = "https://origenes-coffee.vercel.app"  # actualizar si cambia el dominio
 
 def fact(dt, dd):
     return f"<div><dt>{dt}</dt><dd>{dd}</dd></div>"
@@ -440,7 +446,13 @@ PAISES = [
 
 import pathlib
 out = pathlib.Path(__file__).resolve().parent
+JPG_ONLY = {"venezuela-hero", "historia-zocalo"}  # AVIF salía más pesado
+
+def ext(name):
+    return "jpg" if name in JPG_ONLY else "avif"
+
 for p in PAISES:
-    page = TEMPLATE.format(**p)
+    p = dict(p, hero_ext=ext(p["hero"]), photo1_ext=ext(p["photo1"]), photo2_ext=ext(p["photo2"]))
+    page = TEMPLATE.format(site=SITE, **p)
     (out / f"{p['slug']}.html").write_text(page)
     print(f"{p['slug']}.html", len(page), "bytes")
