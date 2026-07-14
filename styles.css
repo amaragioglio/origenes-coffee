@@ -69,6 +69,34 @@ img {
   display: block;
 }
 
+[id] {
+  scroll-margin-top: 5rem; /* anclas no quedan bajo la barra fija */
+}
+
+a,
+button {
+  touch-action: manipulation; /* sin zoom por doble tap en móvil */
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+.article p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--tema);
+  color: var(--paper);
+}
+
+body {
+  font-optical-sizing: auto;
+}
+
 /* accesibilidad: foco visible al navegar con teclado */
 a:focus-visible,
 button:focus-visible,
@@ -852,13 +880,18 @@ input:focus-visible {
     gap: 0;
     background: var(--paper);
     border-bottom: 1px solid var(--hair);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    opacity: 0;
+    transform: translateY(-8px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
   }
 
   .topnav.open {
-    max-height: 20rem;
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
     box-shadow: 0 18px 30px rgba(33, 26, 19, 0.12);
   }
 

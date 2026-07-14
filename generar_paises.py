@@ -13,14 +13,15 @@ TEMPLATE = """<!DOCTYPE html>
   <meta property="og:site_name" content="Orígenes Coffee">
   <meta property="og:title" content="{title} — Orígenes Coffee">
   <meta property="og:description" content="{desc}">
-  <meta property="og:image" content="{site}/assets/img/{hero}.jpg">
+  <meta property="og:image" content="{site}/assets/og/{slug}.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="{site}/{slug}">
-  <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{desc}", "image": "{site}/assets/img/{hero}.jpg", "inLanguage": "en", "publisher": {{"@type": "Organization", "name": "Orígenes Coffee"}}, "mainEntityOfPage": "{site}/{slug}"}}</script>
+  <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{desc}", "image": "{site}/assets/og/{slug}.jpg", "inLanguage": "en", "publisher": {{"@type": "Organization", "name": "Orígenes Coffee"}}, "mainEntityOfPage": "{site}/{slug}"}}</script>
   <link rel="preload" as="image" href="assets/img/{hero}.{hero_ext}" imagesrcset="assets/img/{hero}-sm.{hero_ext} 960w, assets/img/{hero}.{hero_ext} 1920w" imagesizes="100vw">
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-normal-300.woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="tema-{slug}">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -111,9 +112,9 @@ TEMPLATE = """<!DOCTYPE html>
           roast of <em>Orígenes {name}</em> — and get every story before
           anyone else.
         </p>
-        <form class="lead-form" id="leadForm" data-origen="{slug}">
+        <form class="lead-form" id="leadForm" aria-live="polite" data-origen="{slug}">
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-          <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+          <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" autocomplete="email" inputmode="email">
           <button type="submit">I want in</button>
         </form>
         <p class="lead-note">No spam. Solo café, historias reales y fotografía real — <em>nada de IA</em>.</p>

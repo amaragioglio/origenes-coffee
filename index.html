@@ -10,13 +10,15 @@
   <meta property="og:site_name" content="Orígenes Coffee">
   <meta property="og:title" content="Orígenes Coffee — The history of coffee in the Americas">
   <meta property="og:description" content="Coffee was not born here. It became ours. Five countries, five histories, and the cup your family never stopped pouring.">
-  <meta property="og:image" content="https://origenes-coffee.vercel.app/assets/img/hero-montanas.jpg">
+  <meta property="og:image" content="https://origenes-coffee.vercel.app/assets/og/atlas.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://origenes-coffee.vercel.app/">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Orígenes Coffee", "url": "https://origenes-coffee.vercel.app/", "description": "Orígenes Coffee — the history of coffee in the Americas, told country by country. Colombia, México, Venezuela, Guatemala, Brasil.", "inLanguage": "en"}</script>
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-normal-300.woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/img/hero-montanas.avif" imagesrcset="assets/img/hero-montanas-sm.avif 960w, assets/img/hero-montanas.avif 1920w" imagesizes="100vw">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -162,9 +164,9 @@
           We're launching soon — starting with these five origins. Leave
           your email and get each country's story before anyone else.
         </p>
-        <form class="lead-form" id="leadForm" data-origen="atlas">
+        <form class="lead-form" id="leadForm" aria-live="polite" data-origen="atlas">
           <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-          <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+          <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" autocomplete="email" inputmode="email">
           <button type="submit">I want in</button>
         </form>
         <p class="lead-note">No spam. Solo café, historias reales y fotografía real — <em>nada de IA</em>.</p>

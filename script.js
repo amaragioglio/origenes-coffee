@@ -141,7 +141,7 @@ if (leadForm) {
 
   leadForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = emailInput.value;
+    const email = emailInput.value.trim();
 
     if (FORMSPREE_ID === "TU_ID_AQUI") {
       mailtoFallback(email);
