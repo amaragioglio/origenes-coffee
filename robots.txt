@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://origenes-coffee.vercel.app/sitemap.xml
+Sitemap: https://origenescoffee.com/sitemap.xml

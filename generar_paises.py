@@ -14,6 +14,8 @@ TEMPLATE = """<!DOCTYPE html>
   <meta property="og:title" content="{title} — Orígenes Coffee">
   <meta property="og:description" content="{desc}">
   <meta property="og:image" content="{site}/assets/og/{slug}.jpg">
+  <meta property="og:url" content="{site}/{slug}">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="{site}/{slug}">
   <script type="application/ld+json">{{"@context": "https://schema.org", "@type": "Article", "headline": "{title}", "description": "{desc}", "image": "{site}/assets/og/{slug}.jpg", "inLanguage": "en", "publisher": {{"@type": "Organization", "name": "Orígenes Coffee"}}, "mainEntityOfPage": "{site}/{slug}"}}</script>
@@ -131,12 +133,17 @@ TEMPLATE = """<!DOCTYPE html>
     </div>
   </footer>
 
+  <script src="analytics-config.js"></script>
   <script src="script.js"></script>
+  <script>
+    window.va = window.va || function () {{ (window.vaq = window.vaq || []).push(arguments); }};
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
 """
 
-SITE = "https://origenes-coffee.vercel.app"  # actualizar si cambia el dominio
+SITE = "https://origenescoffee.com"  # dominio de producción (sin www)
 
 def fact(dt, dd):
     return f"<div><dt>{dt}</dt><dd>{dd}</dd></div>"

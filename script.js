@@ -185,6 +185,10 @@ if (leadForm) {
 
       if (res.ok) {
         showSuccess();
+        // Conversión de ads: no hace nada hasta que haya IDs en analytics-config.js
+        if (typeof window.trackLead === "function") {
+          window.trackLead(leadForm.dataset.origen || "atlas");
+        }
       } else {
         throw new Error(`Formspree ${res.status}`);
       }
