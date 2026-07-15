@@ -1,3 +1,12 @@
 .DS_Store
 node_modules/
 .vercel/
+.env
+.env.local
+.env.*.local
+docs/.obsidian/workspace.json
+docs/.obsidian/workspace-mobile.json
+docs/.obsidian/cache/
+docs/private/
+data/private/
+exports/
