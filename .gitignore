@@ -10,3 +10,5 @@ docs/.obsidian/cache/
 docs/private/
 data/private/
 exports/
+
+docs/.obsidian/graph.json
