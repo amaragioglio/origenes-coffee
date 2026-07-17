@@ -12,6 +12,9 @@ Sitio estático sin dependencias ni build, compuesto por HTML, CSS y JavaScript 
 - `styles.css`: sistema visual editorial.
 - `script.js`: navegación, reveal, parallax, progreso de lectura, CTA móvil, atribución UTM, formulario y video.
 - `analytics-config.js`: carga condicional de pixels y evento unificado de lead.
+- `api/leads.js`: endpoint serverless para captura de leads.
+- `api/_lib/`: validación, rate limiting y cliente REST de Supabase para uso server-only.
+- `supabase/migrations/001_create_leads.sql`: migración SQL propuesta para la tabla `leads`.
 - `generar_paises.py`: genera páginas de país desde una plantilla común.
 - `sitemap.xml` y `robots.txt`: SEO técnico.
 - `vercel.json`: configuración de Vercel.
@@ -47,9 +50,9 @@ Las páginas cargan `styles.css`, `analytics-config.js` y `script.js`. Las pági
 - Parallax sutil del hero en páginas de país.
 - Barra de progreso de lectura.
 - CTA fijo móvil.
-- Captura first-touch de UTMs y click IDs en `sessionStorage`.
-- Envío de leads a Formspree cuando hay ID configurado.
-- Respaldo por `mailto` cuando Formspree no está configurado o falla.
+- Captura first-touch y last-touch de UTMs y click IDs en `localStorage`, con expiración local de 90 días.
+- Envío de leads a `/api/leads` mediante JSON.
+- Mensajes de éxito/error del formulario sin fallback externo.
 - Reproducción de video en pantalla.
 - Año dinámico en el footer.
 
@@ -57,11 +60,19 @@ Las páginas cargan `styles.css`, `analytics-config.js` y `script.js`. Las pági
 
 `generar_paises.py` define una plantilla HTML común y una lista `PAISES` para generar `colombia.html`, `mexico.html`, `venezuela.html`, `guatemala.html` y `brasil.html`. El script usa `SITE = "https://origenescoffee.com"` para metadata y canonical.
 
-## Flujo actual del formulario
+## Flujo actual del formulario y leads
 
 Cada formulario tiene `id="leadForm"` y `data-origen` con el origen correspondiente: `atlas`, `colombia`, `mexico`, `venezuela`, `guatemala` o `brasil`.
 
-`script.js` lee el email, añade `origen`, `pagina`, atribución guardada y `_subject`, y envía por AJAX a `https://formspree.io/f/${FORMSPREE_ID}` si el ID no es el placeholder. Si `FORMSPREE_ID` sigue como `TU_ID_AQUI` o el envío falla, abre un correo prellenado como respaldo.
+`script.js` lee el email, honeypot, consentimiento de privacidad obligatorio, consentimiento de marketing opcional, país de aterrizaje, ruta, first-touch, last-touch, `formStartedAt`, `anonymousSessionId`, `idempotencyKey`, `formVersion` y `consentVersion`. El navegador envía ese payload por `POST /api/leads`.
+
+`api/leads.js` valida método, `Content-Type`, tamaño máximo, rate limit, esquema del payload, rutas permitidas, países permitidos, timing mínimo y honeypot. Si la validación es correcta, usa `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` solo en servidor para insertar o actualizar un registro en Supabase.
+
+El upsert usa `email_normalized` como identidad del lead: crea un registro nuevo si no existe y actualiza campos operativos si ya existe, preservando first-touch y datos de creación. Un consentimiento de marketing previo `true` no se revoca por un envío normal con checkbox desmarcado; la revocación queda reservada para un flujo explícito futuro. `last_touch` solo se actualiza cuando el payload trae al menos una clave útil.
+
+Las respuestas públicas distinguen `leadStatus: "accepted"` para persistencia real, `leadStatus: "ignored"` para honeypot/timing trap y `leadStatus: "duplicate"` para reintentos idempotentes. El cliente solo dispara `trackLead` con `accepted`.
+
+Si faltan variables de entorno de Supabase, el endpoint responde `503 service_unavailable`. No hay secretos reales en el repositorio.
 
 ## Analítica y atribución
 
@@ -69,7 +80,7 @@ Cada formulario tiene `id="leadForm"` y `data-origen` con el origen correspondie
 
 Vercel Web Analytics está cargado en las páginas HTML mediante `/_vercel/insights/script.js`.
 
-La atribución UTM implementada actualmente es first-touch en `sessionStorage` e incluye `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `fbclid`, `gclid`, `ttclid`, `landing` y `referrer`.
+La atribución UTM implementada actualmente guarda first-touch y last-touch en `localStorage` con expiración local de 90 días. Los objetos enviados al servidor solo aceptan `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `fbclid`, `gclid`, `ttclid`, `landing`, `referrer`, `page` y `capturedAt`.
 
 ## SEO, sitemap, robots y canonical
 
@@ -79,10 +90,20 @@ Las páginas tienen metadata Open Graph, canonical y datos estructurados en las 
 
 El despliegue confirmado por configuración es Vercel. `vercel.json` activa clean URLs, cabeceras de seguridad básicas y cache inmutable para `assets/`.
 
-## Arquitectura propuesta, todavía no implementada
+Para activar captura real en Vercel se deben configurar variables de entorno del proyecto, no commitearlas:
 
-Flujo conceptual futuro:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ALLOWED_ORIGINS`
+- `LEADS_MIN_SUBMIT_MS`
+- `LEADS_MAX_PAYLOAD_BYTES`
+- `LEADS_FORM_VERSION`
+- `LEADS_CONSENT_VERSION`
 
-Visitante -> landing por país -> captura de atribución -> formulario -> endpoint seguro -> Supabase -> evento de conversión -> enriquecimiento opcional.
+## Supabase
 
-Este flujo no está implementado en el repositorio actual. Requiere decisiones sobre Supabase, privacidad, consentimiento, protección contra spam, modelo de datos y tracking.
+La migración `supabase/migrations/001_create_leads.sql` define una sola tabla `public.leads`, índices operativos, índice único parcial para `idempotency_key`, constraint de privacidad obligatoria, trigger de `updated_at`, RLS habilitado y policies que niegan acceso a `anon` y `authenticated`. La escritura desde el endpoint debe usar service role en servidor.
+
+La migración queda documentada y versionada, pero no fue ejecutada contra una cuenta real durante la implementación de esta tarea.
+
+El endpoint mantiene chequeo de `Content-Length` y corta lecturas raw que superan 16 KB. Si Vercel entrega `req.body` ya parseado, el código solo puede medir el JSON reserializado con `JSON.stringify`, no el tamaño raw exacto original.

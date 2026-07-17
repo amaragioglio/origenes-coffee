@@ -82,3 +82,21 @@ Formato ADR: fecha, estado, contexto, decisión, razones y consecuencias.
 - Decisión: Mantener arquitectura estática salvo aprobación explícita.
 - Razones: Es suficiente para el smoke test actual y reduce complejidad.
 - Consecuencias: Migraciones de framework requieren decisión documentada.
+
+## ADR-010: Capturar leads con Vercel Serverless Function y Supabase
+
+- Fecha: 2026-07-17
+- Estado: Accepted
+- Contexto: Formspree/mailto no cubría persistencia propia, atribución first-touch/last-touch ni controles de privacidad suficientes.
+- Decisión: Usar `POST /api/leads` como frontera server-only y persistir en una tabla `public.leads` de Supabase mediante `SUPABASE_SERVICE_ROLE_KEY`.
+- Razones: Mantiene el sitio estático, evita exponer credenciales al navegador, permite validar payloads y preserva first-touch al actualizar leads existentes.
+- Consecuencias: Producción requiere ejecutar manualmente la migración SQL en Supabase y configurar variables de entorno en Vercel; no se deben commitear secretos reales.
+
+## ADR-011: No revocar marketing consent desde el formulario de lead
+
+- Fecha: 2026-07-17
+- Estado: Accepted
+- Contexto: El checkbox opcional de marketing representa consentimiento otorgado en un envío, no una preferencia global de unsubscribe.
+- Decisión: Preservar `marketing_consent = true` cuando un lead existente reenvía el formulario con `marketingConsent: false`.
+- Razones: Evita revocar accidentalmente un consentimiento previo por omisión del checkbox en un formulario normal.
+- Consecuencias: La revocación debe implementarse luego mediante un flujo explícito de unsubscribe.
