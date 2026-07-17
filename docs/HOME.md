@@ -33,6 +33,15 @@ Auditar el formulario actual y decidir si se mantiene Formspree o se diseña una
 - [[tasks/README]]
 - [[reports/README]]
 
+## Research Center
+
+- [[research/RESEARCH_INDEX]]
+- [[research/synthesis/actionable-insights]]
+- [[research/synthesis/cross-country-strategy]]
+- [[research/synthesis/smoke-test-experiment-matrix]]
+- [[research/market/us-hispanic-coffee-market]]
+- [[research/market/seo-opportunity-map]]
+
 ## Documentación original existente
 
 - [[../README]]
@@ -41,4 +50,4 @@ Auditar el formulario actual y decidir si se mantiene Formspree o se diseña una
 
 ## Última actualización
 
-2026-07-15
+2026-07-16
