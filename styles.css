@@ -443,9 +443,11 @@ input:focus-visible {
 .progress span {
   display: block;
   height: 100%;
-  width: 0;
+  width: 100%;
   background: var(--tema);
-  transition: width 0.1s linear;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.1s linear;
 }
 
 /* ===== Página de país: apertura ===== */

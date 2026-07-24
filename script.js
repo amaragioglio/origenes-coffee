@@ -80,7 +80,8 @@ if (progressBar) {
     "scroll",
     () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
-      progressBar.style.width = `${(window.scrollY / total) * 100}%`;
+      const progress = total > 0 ? Math.min(window.scrollY / total, 1) : 0;
+      progressBar.style.transform = `scaleX(${progress})`;
     },
     { passive: true }
   );
