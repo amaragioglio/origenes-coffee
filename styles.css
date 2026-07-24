@@ -744,10 +744,12 @@ input:focus-visible {
   align-items: flex-end;
   max-width: 480px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .lead-form input {
-  flex: 1;
+  flex: 1 1 16rem;
+  min-width: 0;
   border: none;
   border-bottom: 1px solid var(--ink);
   background: transparent;
@@ -756,6 +758,10 @@ input:focus-visible {
   font-size: 1rem;
   color: var(--ink);
   border-radius: 0;
+}
+
+.lead-form .form-honeypot {
+  display: none;
 }
 
 .lead-form input::placeholder {
