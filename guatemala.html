@@ -144,8 +144,20 @@
         </p>
         <form class="lead-form" id="leadForm" aria-live="polite" data-origen="guatemala">
           <input class="form-honeypot" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address" autocomplete="email" inputmode="email">
-          <button type="submit">I want in</button>
+          <div class="lead-form-row">
+            <label class="sr-only" for="leadEmail">Email address</label>
+            <input id="leadEmail" type="email" name="email" placeholder="you@email.com" required autocomplete="email" inputmode="email">
+            <button type="submit">I want in</button>
+          </div>
+          <label class="lead-check lead-privacy">
+            <input type="checkbox" name="privacyAcknowledged" required>
+            <span>Acepto que Origenes Coffee guarde mi email y atribucion de campana para responder a esta lista. Politica de privacidad: [PENDIENTE: correo de privacidad] · [PENDIENTE: responsable del sitio]</span>
+          </label>
+          <label class="lead-check">
+            <input type="checkbox" name="marketingConsent">
+            <span>Quiero recibir historias, lanzamientos y pruebas de producto por email.</span>
+          </label>
+          <p class="lead-error" role="alert" hidden>No pudimos guardar tu email. Intentalo de nuevo.</p>
         </form>
         <p class="lead-note">No spam. Solo café, historias reales y fotografía real — <em>nada de IA</em>.</p>
       </div>

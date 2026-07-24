@@ -22,7 +22,7 @@ origenes-coffee/
   guatemala.html    → artículo Nº 04 — Tierra de volcanes
   brasil.html       → artículo Nº 05 — O gigante do cafezinho
   styles.css        → sistema editorial minimalista (ref. La Cabra): papel crema, serif ligera, hairlines
-  script.js         → topbar, menú móvil, reveal, formulario de leads (mailto → cambiar a Formspree/Tally)
+  script.js         → topbar, menú móvil, reveal, formulario de leads hacia /api/leads
   INVESTIGACION.md  → investigación de referencias y dirección de diseño
   assets/img/       → fotografías reales + CREDITOS.md
 ```
@@ -59,22 +59,18 @@ visita (first-touch, en sessionStorage) y los adjunta a cada lead junto
 con la página de aterrizaje y el referrer. La convención de campañas y
 los copys por país están en [ADS.md](ADS.md).
 
-## Conectar Formspree (medición de leads)
+## Conectar Supabase (medición de leads)
 
-El formulario ya envía por AJAX a Formspree y registra en cada lead el
-**origen** (colombia, mexico, venezuela, guatemala, brasil o atlas) y la
-página desde la que se envió. Solo falta el ID de tu cuenta:
+El formulario envía por AJAX a `POST /api/leads`, una función serverless de
+Vercel que guarda cada lead en Supabase sin exponer llaves privadas al
+navegador. Captura email, origen, página, consentimiento, UTMs first-touch y
+last-touch.
 
-1. Crea una cuenta gratis en <https://formspree.io> (con tu Gmail).
-2. Crea un formulario nuevo; te dará una URL tipo
-   `https://formspree.io/f/xayzabcd`.
-3. En `script.js`, reemplaza `TU_ID_AQUI` por esa parte final
-   (ej. `xayzabcd`) en la línea `const FORMSPREE_ID = ...`.
+Para producción:
 
-Mientras el ID siga siendo el placeholder, el formulario no pierde leads:
-abre un correo pre-llenado como respaldo. Si Formspree falla en algún
-envío, también cae a ese respaldo. El plan gratis de Formspree incluye
-50 envíos/mes — suficiente para el smoke test.
+1. Ejecuta `supabase/migrations/001_create_leads.sql` en tu proyecto Supabase.
+2. En Vercel, configura `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`.
+3. Configura `ALLOWED_ORIGINS=https://origenescoffee.com`.
 
 ## Deploy con Vercel (recomendado)
 
