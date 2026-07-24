@@ -943,6 +943,21 @@ input:focus-visible {
     padding: 8rem 0 3.5rem;
   }
 
+  .masthead h1 {
+    font-size: clamp(2.6rem, 14vw, 4.2rem);
+    line-height: 1.08;
+    max-width: 10ch;
+  }
+
+  .stagger .line {
+    overflow: visible;
+  }
+
+  .stagger .line > span {
+    animation: none;
+    transform: none;
+  }
+
   .masthead-photo {
     margin-top: 3rem;
   }
@@ -959,6 +974,8 @@ input:focus-visible {
     grid-template-columns: 1fr;
     gap: 1.6rem;
     padding: 2.6rem 0;
+    opacity: 1;
+    transform: none;
   }
 
   .atlas-row:nth-child(even) .atlas-media {
@@ -1016,6 +1033,11 @@ input:focus-visible {
     flex-direction: column;
     align-items: stretch;
     gap: 1.4rem;
+  }
+
+  .lead-form input {
+    flex: 0 0 auto;
+    width: 100%;
   }
 
   .lead-form button {
